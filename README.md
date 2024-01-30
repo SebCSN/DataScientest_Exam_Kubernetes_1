@@ -115,3 +115,88 @@ Remarque :
 
 Il faudra donc compléter le code fourni pour l'API de manière à permettre la communication entre l'API et la base de données, reconstruire l'image Docker correspondante et la téléverser dans DockerHub. 
 De plus, il faudra changer le code de l'API pour récupérer le mot de passe de la base de données : `datascientest1234`. Toutefois, ce mot de passe ne peut pas être codé en dur et doit donc être mis dans un `Secret`.
+
+## Etape n°1 : Test de déploiment avec un docker compose
+
+- Correction du code Python pour pouvoir exécuter coorectement les requêtes :
+
+    ```python
+    from sqlalchemy import text
+
+    ...
+    results = connection.execute(text('SELECT * FROM Users;'))
+    ...
+    results = connection.execute(text(
+        'SELECT * FROM Users WHERE Users.id = {};'.format(user_id)))
+    ```
+
+- Récupération des variables d'environnement MYSQL_URL et MYSQL_PASSWORD dans le code de l'application :
+
+    ```python
+    import os
+    ...
+    mysql_url = os.getenv('MYSQL_URL')
+    ...
+    mysql_password = os.getenv('MYSQL_PASSWORD')
+    ```
+
+- Ajout de la fonctionnalité d'ajout et de suppression d'utilisateur pour tester la persistance des données.
+
+- Remarque : Si on rentre dans le conteneur lancé à partir de l'image datascientest/mysql-k8s:1.0.0, on a :
+
+    ```bash
+    docker-compose up -d
+    Building with native build. Learn about native build in Compose here: https://docs.docker.com/go/compose-native-build/
+    Creating network "datascientest_exam_kubernetes_1_default" with the default driver
+    Creating datascientest_exam_kubernetes_1_ma_bdd_1 ... done
+    Creating datascientest_exam_kubernetes_1_mon_api_1 ... done
+
+    ubuntu@ip-172-31-45-18:~/DataScientest_Exam_Kubernetes_1$ docker ps 
+    CONTAINER ID   IMAGE                                     COMMAND                  CREATED          STATUS          PORTS                    NAMES
+    7091bebc4a26   datascientest_exam_kubernetes_1_mon_api   "/bin/sh -c 'uvicorn…"   11 seconds ago   Up 10 seconds   0.0.0.0:8001->8000/tcp   datascientest_exam_kubernetes_1_mon_api_1
+    957043b24471   datascientest/mysql-k8s:1.0.0             "docker-entrypoint.s…"   12 seconds ago   Up 11 seconds   3306/tcp, 33060/tcp      datascientest_exam_kubernetes_1_ma_bdd_1
+
+    ubuntu@ip-172-31-45-18:~/DataScientest_Exam_Kubernetes_1$ docker exec -it datascientest_exam_kubernetes_1_ma_bdd_1 bash
+    root@957043b24471:/# mysql -u root -p
+    Enter password: 
+    ...
+
+    mysql> show databases;
+    +--------------------+
+    | Database           |
+    +--------------------+
+    | Main               |
+    | information_schema |
+    | mysql              |
+    | performance_schema |
+    | sys                |
+    +--------------------+
+    5 rows in set (0.00 sec)
+
+    mysql> use Main
+    Reading table information for completion of table and column names
+    You can turn off this feature to get a quicker startup with -A
+
+    Database changed
+    mysql> show tables;
+    +----------------+
+    | Tables_in_Main |
+    +----------------+
+    | Users          |
+    +----------------+
+    1 row in set (0.00 sec)
+
+    mysql> select * from Users;
+    +-----+-----------+-------------------------------------------------+
+    | id  | username  | email                                           |
+    +-----+-----------+-------------------------------------------------+
+    |   1 | August    | eu.neque.pellentesque@eumetus.edu               |
+    |   2 | Linda     | eleifend.Cras.sed@cursusnonegestas.com          |
+    ...
+    |  99 | Keefe     | mattis.Integer@lectussit.edu                    |
+    | 100 | Abbot     | Cum.sociis@risusvariusorci.ca                   |
+    +-----+-----------+-------------------------------------------------+
+    100 rows in set (0.01 sec)
+    ```
+
+- Après avoir enregistré l'adresse ip du serveur sur ClouDNS au nom de domaine seb-coasne.cloudns.biz, le service est accessible à l'adresse : http://kube.seb-coasne.cloudns.biz:8001/docs

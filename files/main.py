@@ -1,7 +1,9 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.engine import create_engine
-
+from sqlalchemy import text
+import os
+from typing import Optional
 
 #############################################################################################################################
 # Création d'une instance de FastAPI avec le titre "User API" :
@@ -14,10 +16,10 @@ server = FastAPI(title='User API')
 # Configuration de la connexion à la base de données MySQL en utilisant SQLAlchemy pour créer un moteur de base de données :
 
 # creating a connection to the database
-mysql_url = ''  # to complete
+mysql_url = os.getenv('MYSQL_URL')
 mysql_user = 'root'
-mysql_password = ''  # to complete
-database_name = 'Main'
+mysql_password = os.getenv('MYSQL_PASSWORD')
+database_name = 'Main' # BDD créée à l'intérieur du conteneur
 
 # recreating the URL connection
 connection_url = 'mysql://{user}:{password}@{url}/{database}'.format(
@@ -59,7 +61,7 @@ async def get_status():
 @server.get('/users') 
 async def get_users():
     with mysql_engine.connect() as connection:
-        results = connection.execute('SELECT * FROM Users;')
+        results = connection.execute(text('SELECT * FROM Users;'))
 
     results = [
         User(
@@ -73,8 +75,8 @@ async def get_users():
 @server.get('/users/{user_id:int}', response_model=User)
 async def get_user(user_id):
     with mysql_engine.connect() as connection:
-        results = connection.execute(
-            'SELECT * FROM Users WHERE Users.id = {};'.format(user_id))
+        results = connection.execute(text(
+            'SELECT * FROM Users WHERE Users.id = {};'.format(user_id)))
 
     results = [
         User(
@@ -89,3 +91,39 @@ async def get_user(user_id):
             detail='Unknown User ID')
     else:
         return results[0]
+
+# Route pour créer un nouvel utilisateur
+@server.post('/users', response_model=User)
+async def create_user(user: User):
+    with mysql_engine.connect() as connection:
+        query = text('INSERT INTO Users (username, email) VALUES (:username, :email);') # Insére un nouvel utilisateur dans la base de données
+        result = connection.execute(query, {"username": user.username, "email": user.email})
+
+        connection.commit() # Enregistrement des modifs en BDD
+
+    # Retourne le nouvel utilisateur créé :
+    return User(user_id=result.lastrowid, username=user.username, email=user.email)
+
+# Route pour supprimer un utilisateur en fonction de user_id
+@server.delete('/users/{user_id:int}')
+async def delete_user(user_id: int):
+    with mysql_engine.connect() as connection:
+        # Vérification si l'utilisateur existe
+        existing_user = connection.execute(
+            text('SELECT * FROM Users WHERE Users.id = {};'.format(user_id))
+        ).fetchall()
+
+        if not existing_user:
+            raise HTTPException(
+                status_code=404,
+                detail='Unknown User ID'
+            )
+
+        # Suppression de l'utilisateur de la base de données
+        query = text('DELETE FROM Users WHERE Users.id = :user_id;')
+        connection.execute(query, {"user_id": user_id})
+
+        connection.commit() # Enregistrement des modifs en BDD
+
+    # Retourne un message indiquant que l'utilisateur a été supprimé avec succès
+    return {"message": f"User with ID {user_id} has been deleted"}
