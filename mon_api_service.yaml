@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mon-api-service
+spec:
+  selector:
+    app: mon_api
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 8001 # Port pour la liaison à l'Ingress
+    targetPort: 8000 # Port exposer par le conteneur Docker

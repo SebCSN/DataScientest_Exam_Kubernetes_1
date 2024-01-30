@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mon-ingress
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: kubernetes.seb-coasne.cloudns.biz
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: mon-api-service
+                port:
+                  number: 8001

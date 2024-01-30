@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ma-bdd-statefulset
+  labels:
+    app: ma_bdd
+spec:
+  serviceName: ma-bdd
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ma_bdd
+  template:
+    metadata:
+      labels:
+        app: ma_bdd
+    spec:
+      containers:
+        - image: datascientest/mysql-k8s:1.0.0
+          name: mariadb
+          ports:
+            - containerPort: 3306
+              protocol: TCP
+          volumeMounts:
+            - name: ma-bdd-data
+              mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+    - metadata:
+        name: ma-bdd-data
+      spec:
+        storageClassName: local-path
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

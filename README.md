@@ -218,3 +218,11 @@ De plus, il faudra changer le code de l'API pour récupérer le mot de passe de 
     docker login
     docker push dockersebc/datascientest-exam-kubernetes-1:latest
     ```
+
+## Etape n°3 : Déploiement de l'app
+
+- Il suffit d'exécuter la commande `chmod +x ./deploiement.sh && ./deploiement.sh` pour lancer le déploiement.
+- Le service est accessible ici : 
+    - http://kubernetes.seb-coasne.cloudns.biz/docs
+    - http://kubernetes.seb-coasne.cloudns.biz/users
+    - ...
