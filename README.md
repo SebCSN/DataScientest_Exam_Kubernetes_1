@@ -200,3 +200,21 @@ De plus, il faudra changer le code de l'API pour récupérer le mot de passe de 
     ```
 
 - Après avoir enregistré l'adresse ip du serveur sur ClouDNS au nom de domaine seb-coasne.cloudns.biz, le service est accessible à l'adresse : http://kube.seb-coasne.cloudns.biz:8001/docs
+
+## Etape n°2 : Push de mon image sur Docker hub
+
+- Dans le terminal, j’ai effectué les commandes suivantes : 
+
+    ```bash
+    docker build -t dockersebc/datascientest-exam-kubernetes-1:latest .
+    docker run -p 8000:8000 dockersebc/datascientest-exam-kubernetes-1
+    ```
+
+- En se rendant sur son navigateur web à l’adresse `adresse_ip_vm:8000/docs`, on accéde bien aux infos de la documentation de mon api.
+
+- On se loggue à son compte DockerHub sur la VM et on pousse l'image : : 
+
+    ```bash
+    docker login
+    docker push dockersebc/datascientest-exam-kubernetes-1:latest
+    ```
