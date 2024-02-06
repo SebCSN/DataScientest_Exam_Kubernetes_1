@@ -17,8 +17,8 @@ spec:
         app: mon_api
     spec:
       containers:
-        - name: mon-api-conteneurs
-          image: dockersebc/datascientest-exam-kubernetes-1:latest
+        - name: mon-api-conteneur
+          image: dockersebc/datascientest-exam-kubernetes-mon-api:latest
           ports:
             - containerPort: 8000 # Port exposer par le conteneur Docker
           envFrom:

@@ -16,14 +16,21 @@ spec:
         app: ma_bdd
     spec:
       containers:
-        - image: datascientest/mysql-k8s:1.0.0
-          name: mariadb
+        - name: ma-bdd-conteneur
+          image: dockersebc/datascientest-exam-kubernetes-ma-bdd:latest
           ports:
             - containerPort: 3306
               protocol: TCP
           volumeMounts:
             - name: ma-bdd-data
               mountPath: /var/lib/mysql
+          env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: "mdp"
+          - name: MYSQL_DATABASE
+            value: "bdd_test"
+          - name: MYSQL_PASSWORD
+            value: "mdp"
   volumeClaimTemplates:
     - metadata:
         name: ma-bdd-data

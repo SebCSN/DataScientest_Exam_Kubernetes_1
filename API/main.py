@@ -19,7 +19,7 @@ server = FastAPI(title='User API')
 mysql_url = os.getenv('MYSQL_URL')
 mysql_user = 'root'
 mysql_password = os.getenv('MYSQL_PASSWORD')
-database_name = 'Main' # BDD créée à l'intérieur du conteneur
+database_name = 'bdd_test' # BDD créée à l'intérieur du conteneur
 
 # recreating the URL connection
 connection_url = 'mysql://{user}:{password}@{url}/{database}'.format(

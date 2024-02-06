@@ -226,3 +226,10 @@ De plus, il faudra changer le code de l'API pour récupérer le mot de passe de 
     - http://kubernetes.seb-coasne.cloudns.biz/docs
     - http://kubernetes.seb-coasne.cloudns.biz/users
     - ...
+
+## Etape n°4 : Création de mon propre conteneur de base de données et adaptation pour faire tourner sur ma VM Ubuntu
+
+- Le service est accessible ici : 
+    - http://vm-ubuntu-sur-utm/docs
+    - http://vm-ubuntu-sur-utm/users
+    - ...

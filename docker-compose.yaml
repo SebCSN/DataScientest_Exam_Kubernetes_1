@@ -2,19 +2,23 @@ version: '3.7'
 
 services:
   mon_api:
-    build: .
-    volumes:
-      - ./movie-service/:/app/
+    build: ./API
     ports:
       - 8001:8000
     environment:
-      - MYSQL_URL=ma_bdd
-      - MYSQL_PASSWORD=datascientest1234
+      - MYSQL_URL=ma-bdd-service
+      - MYSQL_PASSWORD=mdp
     depends_on:
-      - ma_bdd
+      - ma-bdd-service
 
-  ma_bdd:
-    image: datascientest/mysql-k8s:1.0.0
+  ma-bdd-service:
+    build: ./BDD
+    environment:
+      MYSQL_ROOT_PASSWORD: mdp
+      MYSQL_DATABASE: bdd_test
+      MYSQL_PASSWORD: mdp
+    ports:
+      - "3306:3306"
     volumes:
       - ma_bdd_data:/var/lib/mysql
 
