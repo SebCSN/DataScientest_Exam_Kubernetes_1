@@ -236,3 +236,22 @@ Dans le dossier base, on crée les fichiers YAML pour nos ressources.
 - Personnalisez avec Kustomize :
 Dans le fichier kustomization.yaml dans mon_kustomize/base, on peut spécifier les ressources qu'on souhaite inclure, les modifications qu'on souhaite apporter et les secrets qu'on souhaite utiliser.
 - Exécution de `kustomize build mon_kustomize/base` pour générer notre configuration Kubernetes consolidée. Et on peut utiliser cette configuration pour déployer nos ressources Kubernetes avec `kubectl apply -k mon_kustomize/base/`.
+
+## Etape n°5 : Déploiement de l'app avec Helm Charts
+
+- Installation de Helm à l'aide de : 
+    ```bash
+    curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+    chmod 700 get_helm.sh
+    ./get_helm.sh
+    ```
+    Pour plus d'informations, voir la [page d'installation officielle de Helm](https://helm.sh/docs/intro/install/).
+
+- Création de la structure de répertoires pour notre chart Helm : on utilise la commande `helm create mon_chart` pour générer une structure de répertoires de base pour notre chart Helm.
+
+- Organisation de nos fichiers YAML dans la structure du chart Helm :  on déplace nos fichiers YAML existants dans les répertoires appropriés de la structure de chart Helm qu'on a créé précédemment.
+
+- Modification si nécessaire des fichiers Chart.yaml et values.yaml : Dans le fichier Chart.yaml, on spécifie les métadonnées de notre chart, telles que le nom, la version, la description, etc. Dans le fichier values.yaml, on spécifie les valeurs par défaut qu'on souhaite utiliser pour nos ressources Kubernetes, telles que les variables d'environnement, les ports, etc.
+Ici, je n'ai rien fait de particulier.
+
+- Installation de notre chart Helm : On utilise la commande `helm install mon-chart ./mon-chart/` pour installer notre chart Helm dans notre cluster Kubernetes et `helm upgrade mon-chart ./mon-chart/` pour mettre à jour.
