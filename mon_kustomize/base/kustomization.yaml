@@ -1,0 +1,7 @@
+resources:
+  - api/mon_api_deployment.yaml
+  - api/mon_api_secret.yaml
+  - api/mon_api_service.yaml
+  - bdd/ma_bdd_service.yaml
+  - bdd/ma_bdd_statefulset.yaml
+  - ingress/mon_ingress.yaml

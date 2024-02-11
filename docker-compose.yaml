@@ -3,8 +3,6 @@ version: '3.7'
 services:
   mon_api:
     build: .
-    volumes:
-      - ./movie-service/:/app/
     ports:
       - 8001:8000
     environment:
@@ -12,7 +10,7 @@ services:
       - MYSQL_PASSWORD=datascientest1234
     depends_on:
       - ma_bdd
-
+Ò
   ma_bdd:
     image: datascientest/mysql-k8s:1.0.0
     volumes:

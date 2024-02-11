@@ -219,10 +219,20 @@ De plus, il faudra changer le code de l'API pour récupérer le mot de passe de 
     docker push dockersebc/datascientest-exam-kubernetes-1:latest
     ```
 
-## Etape n°3 : Déploiement de l'app
+## Etape n°3 : Déploiement de l'app avec fichiers yaml standards
 
 - Il suffit d'exécuter la commande `chmod +x ./deploiement.sh && ./deploiement.sh` pour lancer le déploiement.
 - Le service est accessible ici : 
     - http://kubernetes.seb-coasne.cloudns.biz/docs
     - http://kubernetes.seb-coasne.cloudns.biz/users
     - ...
+
+## Etape n°4 : Déploiement de l'app avec Kustomize
+
+- Mise en place de la structure de répertoire : Création du répertoire mon_kustomize contenant un sous-répertoire base pour stocker mes ressources de base et éventuellement des répertoires supplémentaires pour d'autres environnements ou configurations.
+- Création des fichiers Kustomize : Dans le sous-répertoire base, création d'un fichier kustomization.yaml qui référence les ressources qu'on souhaite déployer.
+- Définition des ressources :
+Dans le dossier base, on crée les fichiers YAML pour nos ressources. 
+- Personnalisez avec Kustomize :
+Dans le fichier kustomization.yaml dans mon_kustomize/base, on peut spécifier les ressources qu'on souhaite inclure, les modifications qu'on souhaite apporter et les secrets qu'on souhaite utiliser.
+- Exécution de `kustomize build mon_kustomize/base` pour générer notre configuration Kubernetes consolidée. Et on peut utiliser cette configuration pour déployer nos ressources Kubernetes avec `kubectl apply -k mon_kustomize/base/`.
