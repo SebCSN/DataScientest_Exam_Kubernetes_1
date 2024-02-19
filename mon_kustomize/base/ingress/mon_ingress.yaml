@@ -5,7 +5,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: kubernetes.seb-coasne.cloudns.biz
+    - host: vm-ubuntu-sur-utm
       http:
         paths:
           - path: /
