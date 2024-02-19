@@ -6,7 +6,7 @@ metadata:
     app: ma_bdd
 spec:
   serviceName: ma-bdd
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: ma_bdd

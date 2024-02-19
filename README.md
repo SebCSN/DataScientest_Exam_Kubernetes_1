@@ -255,3 +255,7 @@ Dans le fichier kustomization.yaml dans mon_kustomize/base, on peut spécifier l
 Ici, je n'ai rien fait de particulier.
 
 - Installation de notre chart Helm : On utilise la commande `helm install mon-chart ./mon-chart/` pour installer notre chart Helm dans notre cluster Kubernetes et `helm upgrade mon-chart ./mon-chart/` pour mettre à jour.
+
+## Correction importante : 
+
+Modifications du nombre de réplicas de ma BDD : j'en avais mis 3 ce qui me posais des soucis car je n'accèdais pas toujours aux mêmes infos. En fait, j'avais 3 bases de donnees avec des contenus differents.
